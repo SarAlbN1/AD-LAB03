@@ -1,0 +1,17 @@
+corrida,etapa,segundos,detalle
+2026-10-11T04:26:05+00:00,extract,2.23,13 archivos
+2026-10-11T04:26:05+00:00,validar bronze,0.31,"147,413 filas"
+2026-10-11T04:26:05+00:00,transform,1.26,"147,411 renglones / 68,807 facturas"
+2026-10-11T04:26:05+00:00,validar silver,0.13,
+2026-10-11T04:26:05+00:00,load,1.7,"one-hot 68,807x1,265"
+2026-10-11T04:26:05+00:00,validar gold,0.03,
+2026-10-11T04:26:05+00:00,TOTAL,5.66,"147,411 renglones"
+2026-10-11T04:26:48+00:00,extract,0.13,13 archivos
+2026-10-11T04:26:48+00:00,cache,0.0,sin cambios
+2026-10-11T04:28:44+00:00,extract,2.3,13 archivos
+2026-10-11T04:28:44+00:00,validar bronze,0.32,"147,413 filas"
+2026-10-11T04:28:44+00:00,transform,1.24,"147,411 renglones / 68,807 facturas"
+2026-10-11T04:28:44+00:00,validar silver,0.12,
+2026-10-11T04:28:44+00:00,load,1.92,"one-hot 68,807x1,265"
+2026-10-11T04:28:44+00:00,validar gold,0.03,
+2026-10-11T04:28:44+00:00,TOTAL,5.92,"147,411 renglones"

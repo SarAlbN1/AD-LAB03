@@ -1,0 +1,30 @@
+control,severidad,resultado,valor,detalle
+bronze: registros <= los del header DBF,falla,ok,"147,413 de 147,413",
+bronze: registros borrados omitidos,aviso,ok,0,
+bronze: un sha256 por archivo,falla,ok,13,
+bronze: DESCRI sin caracteres de control,falla,ok,0,el Varchar VFP quedo mal recortado
+bronze: columna de orden fisico presente,falla,ok,_fila,
+calendario: domingo/ contiene solo domingo,falla,ok,domingo,la fecha del nombre se leyo como ddmmyyyy
+calendario: jueves/ contiene solo jueves,falla,ok,jueves,la fecha del nombre se leyo como ddmmyyyy
+calendario: lunes/ contiene solo lunes,falla,ok,lunes,la fecha del nombre se leyo como ddmmyyyy
+calendario: martes/ contiene solo martes,falla,ok,martes,la fecha del nombre se leyo como ddmmyyyy
+calendario: miercoles/ contiene solo miercoles,falla,ok,miercoles,la fecha del nombre se leyo como ddmmyyyy
+calendario: sabado/ contiene solo sabado,falla,ok,sabado,la fecha del nombre se leyo como ddmmyyyy
+calendario: viernes/ contiene solo viernes,falla,ok,viernes,la fecha del nombre se leyo como ddmmyyyy
+bronze: campos sin informacion,aviso,ok,24,"CODIGOANT, REQ, DESC, CODCCO, COMIS, DESCRI1, DESCRI2, PORIVA, TALLA, VENDEDOR, FRENTE, DESARRO, TIPOES, CUERDA, LOTE, DO, REMIS, VLRDESC, FECVEN, CODCCOE, NEGOCIO, PORRETEN, VLRRETEN, CODDEP"
+silver: sin renglones huerfanos,falla,ok,0,
+silver: n_lineas coincide con los renglones,falla,ok,consistente,
+silver: cantidades no negativas,falla,ok,0,
+silver: todo renglon tiene producto,falla,ok,0,
+silver: hora estimada dentro de la jornada,falla,ok,7..21,
+silver: hora estimada monotona por caja,falla,ok,0,
+silver: renglones con descuadre > $1,aviso,ok,0.00%,cantidad x precio - descuento vs subtotal
+silver: facturas con total <= 0,aviso,ok,0,
+silver: facturas de un solo producto,aviso,ok,"28,203 (41.0%)",no aportan reglas de asociacion
+silver: tipos de documento,aviso,ok,"FA:138,546, CO:3,903, AS:2,824, AE:2,122, DC:16",
+gold: dim_calendario sin fechas repetidas,falla,ok,13,
+gold: toda fecha de hechos esta en el calendario,falla,ok,0,
+gold: dia_semana consistente entre renglon y factura,falla,ok,0,
+gold: dia_semana sin nulos,falla,ok,0,
+gold: cobertura por dia de la semana,aviso,aviso,"lunes:2, martes:2, miercoles:2, jueves:2, viernes:1, sabado:2, domingo:2",dias con menos observaciones: viernes
+gold: paneles de calendario,aviso,ok,"completa:7, parcial:5, atipico:1",se necesita un panel 'completa' para comparar dias de la semana

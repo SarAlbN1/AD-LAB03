@@ -1,0 +1,200 @@
+% Laboratorio 03 - Reglas de asociacion
+%
+% Formato exigido por el enunciado: maximo 2 paginas, 12pt, Times New Roman, 2 columnas.
+% Las tablas y las cifras del texto se generan desde los CSV de outputs/ con
+% `python -m src.report_tables`; aqui no hay ningun numero escrito a mano.
+% Compilar con: make report   (dentro del contenedor)
+%
+% Sobre la fuente: mathptmx usa Nimbus Roman No9 L, el clon libre metricamente
+% identico a Times New Roman. Es la forma estandar de cumplir el requisito en LaTeX;
+% el archivo de Monotype es licenciado y no se distribuye con TeX Live.
+\documentclass[12pt,twocolumn]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathptmx}          % Times New Roman para texto y matematicas
+\usepackage[margin=1.4cm]{geometry}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{microtype}
+
+% Ajustes para que dos paginas densas sigan siendo legibles.
+\setlength{\columnsep}{0.6cm}
+\setlength{\parskip}{0pt}
+\setlength{\abovecaptionskip}{2pt}
+\setlength{\belowcaptionskip}{0pt}
+\setlength{\textfloatsep}{5pt}
+\setlength{\intextsep}{5pt}
+\renewcommand{\arraystretch}{0.9}
+\pagestyle{empty}
+
+% Titulos de seccion compactos, sin paquete extra (titlesec no esta en la imagen).
+\makeatletter
+\renewcommand\section{\@startsection{section}{1}{\z@}%
+  {4pt plus 1pt minus 1pt}{2pt}{\normalfont\large\bfseries}}
+\makeatother
+
+% Cifras generadas desde los datos; si falta el archivo, el documento compila igual.
+\IfFileExists{tablas/cifras.tex}{\input{tablas/cifras.tex}}{}
+\providecommand{\cifraRenglones}{--}\providecommand{\cifraFacturas}{--}
+\providecommand{\cifraProductos}{--}\providecommand{\cifraCanasta}{--}
+\providecommand{\cifraUnitarias}{--}\providecommand{\cifraTicketMediano}{--}
+\providecommand{\cifraTicketPromedio}{--}\providecommand{\cifraChiCuadrado}{--}
+\providecommand{\cifraPValor}{--}\providecommand{\cifraFacturasPanel}{--}
+\providecommand{\cifraEquivalentes}{--}\providecommand{\cifraCombinaciones}{--}
+\providecommand{\cifraSinCompletar}{--}\providecommand{\cifraAprioriSinMemoria}{--}
+\providecommand{\cifraAprioriCorridas}{--}
+
+\newcommand{\incluirtabla}[1]{%
+  \IfFileExists{tablas/#1}{\begin{center}\footnotesize\input{tablas/#1}\end{center}}%
+  {\begin{center}\small\textit{(tabla pendiente: \texttt{make all})}\end{center}}}
+\newcommand{\incluirfigura}[2]{%
+  \IfFileExists{../outputs/figs/#1}{%
+    \begin{figure}[h]\centering
+    \includegraphics[width=0.96\linewidth]{../outputs/figs/#1}
+    \caption{\footnotesize #2}
+    \end{figure}}{%
+    \begin{center}\small\textit{(figura pendiente: \texttt{make all})}\end{center}}}
+
+\title{\vspace{-1.3cm}\textbf{Reglas de asociación sobre transacciones de retail:
+apriori frente a fp-growth}}
+\author{Sara Albarracín}
+\date{\vspace{-0.35cm}\small Laboratorio 03 --- 16 de octubre de 2026\vspace{-0.45cm}}
+
+\begin{document}
+\maketitle
+
+\section*{1. Introducción}
+
+Se analizan las facturas de una tienda de conveniencia con dos objetivos: describir el
+comportamiento de compra y comparar dos implementaciones que resuelven el mismo
+problema, apriori y fp-growth. El conjunto son 13 archivos DBF de Visual FoxPro, uno
+por día, con \cifraRenglones{} renglones que se agrupan en \cifraFacturas{} facturas
+sobre \cifraProductos{} productos. El dato que condiciona todo es el tamaño de la
+canasta: \cifraCanasta{} renglones por factura y \cifraUnitarias{} de facturas con un
+solo producto. Una canasta tan corta obliga a soportes mínimos muy bajos, y es ahí
+donde las dos implementaciones dejan de costar lo mismo.
+
+\section*{2. Datos y método}
+
+El enunciado describe texto con una línea por factura; los archivos son DBF con una
+línea por \emph{line-item}, así que la factura se reconstruye agrupando por archivo,
+caja, tipo de documento y consecutivo. La descripción del producto es un
+\texttt{Varchar} de FoxPro, cuyo último byte guarda la longitud: sin interpretarlo cada
+nombre arrastra un carácter de basura, y por eso el lector es propio y no
+\texttt{dbfread}. El procesamiento es un ETL de tres capas con 18 contratos de datos.
+Los nombres se canonizan por código, porque 23 códigos tienen más de una descripción y
+de otro modo el mismo producto repartiría su soporte entre dos ítems.
+
+Los DBF \textbf{no traen hora}. La fecha sale del nombre del archivo; la hora se estima
+repartiendo las facturas de cada caja, en su orden real de facturación, sobre una
+jornada supuesta de 07:00 a 22:00: sirve para la posición dentro del día, no para horas
+absolutas. Se incluyen los cinco tipos de documento, y conviene saber que los que no son
+ventas son el 2\,\% de los documentos y el 55\,\% del valor ---hay un inventario de
+cerveza por \$13,9 millones repetido en cinco fechas---. Por eso se cita ticket
+\emph{mediano} (\cifraTicketMediano{}) y no promedio (\cifraTicketPromedio{}).
+
+\section*{3. Resultados}
+
+La demanda está muy concentrada: las empanadas aparecen en una de cada diez facturas,
+el segundo producto del ranking ya baja al 41\,\% de ese volumen y el décimo no llega al
+22\,\%. El ranking completo está en \texttt{outputs/tables/06\_top10.csv}.
+
+Los 13 archivos cubren dos semanas desiguales; solo el tramo del 9 al 15 de marzo trae
+los siete días una vez cada uno, y es el único donde comparar días es limpio. Sobre ese
+panel de \cifraFacturasPanel{} facturas, el índice es el valor del día sobre el promedio
+semanal.
+
+\incluirtabla{dia_semana.tex}
+
+El viernes concentra un 27\,\% más de tráfico que el promedio y el sábado un 21\,\%
+menos ($\chi^2 = \cifraChiCuadrado$, $p = \cifraPValor$). La canasta, en cambio, es plana
+en los siete días: cambia cuánta gente entra, no qué compra. Ese perfil ---creciente de
+lunes a viernes, bajo el fin de semana--- corresponde a una tienda de entorno laboral o
+escolar, no residencial.
+
+Ambos algoritmos reciben la misma matriz binaria y los mismos parámetros, así que la
+única variable es la implementación. De cada corrida se guarda una firma SHA-256 de sus
+itemsets frecuentes: coinciden en \cifraEquivalentes{} de las \cifraCombinaciones{}
+combinaciones comparables. Las otras \cifraSinCompletar{} no se pueden comparar porque
+\textbf{apriori no terminó}: agotó la memoria en \cifraAprioriSinMemoria{} de sus
+\cifraAprioriCorridas{} corridas, todas las de soporte igual o menor a 0,001.
+
+\incluirtabla{benchmark.tex}
+
+\incluirfigura{10_benchmark.png}{Tiempo y número de reglas según el soporte mínimo
+(escalas logarítmicas). Mismo resultado, distinto costo.}
+
+\section*{4. Respuestas al taller}
+
+\textbf{1. Reglas predecibles ($k=1$).} Las de mayor confianza son de insumo, no de
+consumo: caja de regalo $\rightarrow$ empaque (0,95). Entre productos de consumo, la
+predecible es empanada $\rightarrow$ jugo.
+
+\textbf{2. ¿Difieren los algoritmos?} No en el resultado: donde ambos terminan, los
+itemsets son idénticos. Sí en costo, y de dos maneras. En tiempo, el orden se invierte
+según el soporte: a 0,005 apriori es casi tres veces \emph{más rápido}, porque armar el
+FP-tree tiene un costo fijo que no se amortiza cuando hay poco que minar; a 0,002
+fp-growth ya es seis veces más rápido. En memoria la diferencia es cualitativa: apriori
+materializa los candidatos de cada nivel, y con unos 500 ítems frecuentes eso son
+125.000 pares contra 68.807 transacciones, de modo que el proceso muere. fp-growth no
+genera candidatos y completa el mismo caso en 11 segundos.
+
+\textbf{3. Efecto de los parámetros.} El soporte mínimo gobierna todo:
+
+\incluirtabla{parametros.tex}
+
+Bajar de 0,0005 a 0,0002 multiplica las reglas por 134, pero solo una de cada veinte
+sobrevive al filtro de soporte absoluto. El soporte también decide qué algoritmo es
+viable: por debajo de 0,001, apriori deja de ser una opción en esta máquina.
+\texttt{max\_len} acota el crecimiento limitando el tamaño de los itemsets, aunque no
+salva a apriori, porque el cuello está en los candidatos de nivel 2.
+
+\textbf{4. Reglas espurias.} Sí, y con parámetros precisos: al soporte del análisis no
+aparece ninguna, porque el umbral ya garantiza 34 facturas por regla. Hay que bajar a
+0,0002 (14 facturas) para obtenerlas, y surgen reglas de lift en los miles sostenidas
+por un puñado de facturas ---globos y serpentina $\rightarrow$ toper de cumpleaños,
+lift 3.440 sobre 16 facturas---. El criterio aplicado contra ellas es el soporte
+\emph{absoluto} ($\geq$30 facturas), que no depende del tamaño del conjunto.
+
+\textbf{5. Reglas con $k>1$.} Existen, dominadas por combinaciones de armado de regalo.
+Hay que deduplicar por itemset: cinco productos generan más de veinte reglas con
+idénticos soporte y lift, que son la misma regla escrita de otra forma.
+
+\textbf{6. Probabilidad al azar.} Si fueran independientes sería $P(A)\cdot P(B)$; el
+cociente entre el soporte observado y ese valor es exactamente el \emph{lift}. Se
+contrastó además la tabla $2\times2$ con chi-cuadrado y Fisher, para afirmar la
+asociación con un $p$-valor.
+
+\textbf{7. Reglas interesantes.} Las que unen soporte suficiente con lift sobre el azar
+son de comida rápida más bebida: empanada $\rightarrow$ jugo (411 facturas), papas
+$\rightarrow$ jugo, yogur $\rightarrow$ ponqué. Dos hallazgos fuera del patrón: la
+tienda presta servicio de papelería (fotocopia $\rightarrow$ impresiones, lift 65), y
+aparecen \textbf{sustitutos}, que el lift revela igual de bien ---sándwich
+$\rightarrow$ empanada tiene lift 0,90---: un lift bajo 1 significa que los productos
+compiten por la misma compra.
+
+\textbf{8. Comportamiento del consumidor.} Todo apunta a consumo inmediato: canasta de
+dos productos, ticket mediano de \cifraTicketMediano{}, 41\,\% de facturas de un solo
+ítem y reglas que unen un alimento con una bebida. El cliente no hace mercado, resuelve
+un hambre puntual, y que las reglas se mantengan estables entre días hábiles y fin de
+semana confirma que cambia el volumen de visitas, no la lógica de la compra.
+
+\section*{5. Conclusiones y limitaciones}
+
+Elegir entre apriori y fp-growth no es cuestión de resultado sino de escala, y la
+frontera no es el tiempo sino la memoria: producen los mismos itemsets, pero por debajo
+de 0,001 apriori no llega a producirlos. A soporte alto, en cambio, apriori gana, así
+que la recomendación no es universal: depende del régimen, y este conjunto ---canastas
+de dos productos--- obliga al régimen donde fp-growth es la única opción. Ahí los
+soportes altos no devuelven nada y los muy bajos sobre todo ruido; el soporte absoluto
+resultó mejor filtro que el relativo. En lo descriptivo, la demanda se concentra en
+pocos productos de consumo inmediato y el día mueve el tráfico pero no la conducta, lo
+que sugiere ajustar inventario por día sin cambiar el surtido.
+
+Tres limitaciones. No hay hora en los datos, así que el análisis intradía descansa en un
+supuesto declarado. Falta el DBF del viernes 5 de abril, por lo que ese día tiene una
+sola observación. Y la semana de abril no replica el efecto del día: su volumen cae
+entre 35\,\% y 91\,\% con un gradiente que sigue el orden de los días.
+
+\end{document}

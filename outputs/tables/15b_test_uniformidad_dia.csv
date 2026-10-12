@@ -1,0 +1,10 @@
+clave,valor
+panel,completa
+dias,7
+facturas,46554
+hipotesis nula,las facturas se reparten por igual entre los 7 dias
+chi2,1313.2
+grados de libertad,6
+p_valor,1.536e-280
+se rechaza al 1%,True
+lectura,el dia de la semana si afecta el trafico

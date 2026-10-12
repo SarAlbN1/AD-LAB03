@@ -1,0 +1,9 @@
+clave,valor
+dias comparables,5
+dias con el mismo lado del promedio,2 de 5
+correlacion de rangos (spearman),0.0
+p_valor,1.000
+caida de volumen mediana,-75.5%
+caida monotona por dia,True
+abril sirve de replicacion,False
+lectura,"la semana de abril no replica el efecto del dia: su volumen cae entre -91% y -35% con un gradiente que sigue el orden de los dias, lo que apunta a archivos incompletos mas que a demanda. Sirve para mostrar el cambio de nivel, no para validar el efecto del dia"

@@ -1,0 +1,6 @@
+tipo_doc,documentos,ticket_promedio,ticket_mediano,ticket_maximo,lineas_promedio,valor_total,pct_documentos,pct_valor,es_venta
+FA,67468,6604.3,5053.0,158235.0,2.1,445575567.0,98.0,44.8,True
+CO,582,466790.3,289170.0,2393725.0,6.7,271671970.6,0.8,27.3,False
+AS,402,403661.5,44204.0,13954166.0,7.0,162271915.0,0.6,16.3,False
+AE,339,341926.7,75000.0,3155210.0,6.3,115913140.0,0.5,11.6,False
+DC,16,5583.2,6302.5,7479.0,1.0,89331.0,0.0,0.0,False

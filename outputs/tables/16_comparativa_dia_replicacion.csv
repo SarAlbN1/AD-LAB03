@@ -1,0 +1,6 @@
+dia_semana,facturas_marzo,facturas_abril,indice_marzo,indice_abril,delta_indice,mismo_lado_del_promedio,caida_volumen_pct
+lunes,5978.0,533.0,0.915,0.289,-0.626,True,-91.1
+martes,6551.0,1157.0,1.003,0.628,-0.375,False,-82.3
+miercoles,7151.0,1749.0,1.095,0.95,-0.145,False,-75.5
+jueves,7737.0,2342.0,1.185,1.272,0.087,True,-69.7
+sabado,5239.0,3428.0,0.802,1.861,1.059,False,-34.6

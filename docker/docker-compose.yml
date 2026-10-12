@@ -1,0 +1,45 @@
+# Un solo servicio base, tres formas de usarlo. Los limites de CPU y memoria se fijan
+# para que las mediciones de tiempo del benchmark sean comparables entre corridas.
+x-lab-base: &lab-base
+  build:
+    context: ..
+    dockerfile: docker/Dockerfile
+  image: lab03-reglas-asociacion:1.0
+  working_dir: /lab
+  cpus: 6
+  mem_limit: 10g
+  volumes:
+    # Datos crudos en solo lectura: el laboratorio nunca los modifica.
+    - ../archivos:/lab/archivos:ro
+    - ../src:/lab/src
+    - ../tests:/lab/tests
+    - ../notebooks:/lab/notebooks
+    - ../outputs:/lab/outputs
+    - ../report:/lab/report
+    - ../Makefile:/lab/Makefile
+    - ../requirements.txt:/lab/requirements.txt
+
+services:
+  # Shell interactivo. `docker compose run --rm shell`
+  shell:
+    <<: *lab-base
+    command: bash
+
+  # JupyterLab en http://localhost:8888 (sin token, solo escucha en local).
+  jupyter:
+    <<: *lab-base
+    ports:
+      - "127.0.0.1:8888:8888"
+    command: >
+      jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root
+      --ServerApp.token='' --ServerApp.password=''
+      --notebook-dir=/lab
+
+  # Benchmark fuera de Jupyter: el kernel anade overhead que contamina los tiempos.
+  bench:
+    <<: *lab-base
+    command: python -m src.bench
+
+  report:
+    <<: *lab-base
+    command: make report
