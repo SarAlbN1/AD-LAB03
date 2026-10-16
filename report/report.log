@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian) (preloaded format=pdflatex 2026.10.10)  12 OCT 2026 17:26
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2025/dev/Debian) (preloaded format=pdflatex 2026.10.10)  16 OCT 2026 19:57
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -168,7 +168,7 @@ File: microtype.cfg 2025/02/11 v3.2a microtype main configuration file (RS)
 LaTeX Info: Redefining \microtypesetup on input line 3065.
 )
 (./tablas/cifras.tex)
-LaTeX Font Info:    Trying to load font information for T1+ptm on input line 64
+LaTeX Font Info:    Trying to load font information for T1+ptm on input line 51
 .
  (/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1ptm.fd
 File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
@@ -180,20 +180,20 @@ File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 (./report.aux)
 \openout1 = `report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 64.
-LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 51.
+LaTeX Font Info:    ... okay on input line 51.
 \big@size=\dimen166
 
 *geometry* driver: auto-detecting
@@ -252,20 +252,20 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-LaTeX Info: Redefining \microtypecontext on input line 64.
-Package microtype Info: Applying patch `item' on input line 64.
-Package microtype Info: Applying patch `toc' on input line 64.
-Package microtype Info: Applying patch `eqnum' on input line 64.
-Package microtype Info: Applying patch `footnote' on input line 64.
-Package microtype Info: Applying patch `verbatim' on input line 64.
-LaTeX Info: Redefining \microtypesetup on input line 64.
+LaTeX Info: Redefining \microtypecontext on input line 51.
+Package microtype Info: Applying patch `item' on input line 51.
+Package microtype Info: Applying patch `toc' on input line 51.
+Package microtype Info: Applying patch `eqnum' on input line 51.
+Package microtype Info: Applying patch `footnote' on input line 51.
+Package microtype Info: Applying patch `verbatim' on input line 51.
+LaTeX Info: Redefining \microtypesetup on input line 51.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `alltext-nott'.
-LaTeX Info: Redefining \showhyphens on input line 64.
+LaTeX Info: Redefining \showhyphens on input line 51.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
@@ -274,7 +274,7 @@ Package microtype Info: No adjustment of character kerning.
 File: mt-ptm.cfg 2006/04/20 v1.7 microtype config. file: Times (RS)
 )
 LaTeX Font Info:    Trying to load font information for OT1+ztmcm on input line
- 65.
+ 52.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1ztmcm.fd
 File: ot1ztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OT1/ztmcm.
@@ -284,35 +284,35 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Trying to load font information for OML+ztmcm on input line
- 65.
+ 52.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omlztmcm.fd
 File: omlztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OML/ztmcm.
 )
 LaTeX Font Info:    Trying to load font information for OMS+ztmcm on input line
- 65.
+ 52.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omsztmcm.fd
 File: omsztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OMS/ztmcm.
 )
 LaTeX Font Info:    Trying to load font information for OMX+ztmcm on input line
- 65.
+ 52.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omxztmcm.fd
 File: omxztmcm.fd 2000/01/03 Fontinst v1.801 font definitions for OMX/ztmcm.
 )
-LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 6
-5.
+LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 5
+2.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <14.4> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 65.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 52.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 65.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 52.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 65.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 52.
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `cmtt' (encoding: T1).
 (microtype)             For optimal results, create family-specific settings.
@@ -331,19 +331,19 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1.
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 111.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 95.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 111.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 95.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 111.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 95.
  (./tablas/benchmark.tex
-LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 8
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 9
 .
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 ))
-Overfull \hbox (13.99947pt too wide) in paragraph at lines 1--123
+Overfull \hbox (13.99947pt too wide) in paragraph at lines 1--107
  [] 
  []
 
@@ -351,7 +351,7 @@ Overfull \hbox (13.99947pt too wide) in paragraph at lines 1--123
 File: ../outputs/figs/10_benchmark.png Graphic file (type png)
 <use ../outputs/figs/10_benchmark.png>
 Package pdftex.def Info: ../outputs/figs/10_benchmark.png  used on input line 1
-26.
+10.
 (pdftex.def)             Requested size: 248.42853pt x 93.84998pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
@@ -363,7 +363,7 @@ dist/fonts/enc/dvips/base/8r.enc}
 
 
 ] (./tablas/parametros.tex)
-Overfull \hbox (57.64973pt too wide) in paragraph at lines 1--145
+Overfull \hbox (57.64973pt too wide) in paragraph at lines 1--129
  [] 
  []
 
@@ -378,11 +378,11 @@ L3 programming layer <2025-01-18>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 5023 strings out of 475178
- 79592 string characters out of 5766538
- 516519 words of memory out of 5000000
+ 5017 strings out of 475178
+ 79538 string characters out of 5766538
+ 515525 words of memory out of 5000000
  27694 multiletter control sequences out of 15000+600000
- 626129 words of font info for 276 fonts, out of 8000000 for 9000
+ 625774 words of font info for 272 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  57i,8n,65p,1003b,299s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </root/.texlive2025/texmf-var/fonts/pk/ljfour/jknappen/ec/ectt1200.600pk></u
@@ -393,9 +393,9 @@ xmf-dist/fonts/type1/urw/symbol/usyr.pfb></usr/share/texlive/texmf-dist/fonts/t
 ype1/urw/symbol/usyr.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/u
 tmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr
 /share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on report.pdf (2 pages, 177409 bytes).
+Output written on report.pdf (2 pages, 171708 bytes).
 PDF statistics:
- 84 PDF objects out of 1000 (max. 8388607)
+ 82 PDF objects out of 1000 (max. 8388607)
  36 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  82950 words of extra memory for PDF output out of 89155 (max. 10000000)

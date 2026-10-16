@@ -15,3 +15,5 @@ corrida,etapa,segundos,detalle
 2026-10-11T04:28:44+00:00,load,1.92,"one-hot 68,807x1,265"
 2026-10-11T04:28:44+00:00,validar gold,0.03,
 2026-10-11T04:28:44+00:00,TOTAL,5.92,"147,411 renglones"
+2026-10-16T17:24:05+00:00,extract,0.22,13 archivos
+2026-10-16T17:24:05+00:00,cache,0.0,sin cambios
