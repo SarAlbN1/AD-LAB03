@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Artefactos intermedios de LaTeX (el PDF si se versiona)
+report/*.aux
+report/*.log
+report/*.out
+report/*.toc
+
+# Jupyter
+.ipynb_checkpoints/
