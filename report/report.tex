@@ -3,18 +3,21 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{mathptmx}
-\usepackage[margin=1.4cm]{geometry}
+\usepackage[margin=1.2cm]{geometry}
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{microtype}
 
-\setlength{\columnsep}{0.6cm}
+\setlength{\columnsep}{0.5cm}
 \setlength{\parskip}{0pt}
 \setlength{\abovecaptionskip}{2pt}
 \setlength{\belowcaptionskip}{0pt}
 \setlength{\textfloatsep}{5pt}
 \setlength{\intextsep}{5pt}
-\renewcommand{\arraystretch}{0.9}
+\setlength{\dblfloatsep}{6pt}
+\setlength{\dbltextfloatsep}{5pt}
+\renewcommand{\arraystretch}{0.85}
+\setlength{\tabcolsep}{3pt}
 \pagestyle{empty}
 
 \makeatletter
@@ -32,13 +35,24 @@
 \providecommand{\cifraSinCompletar}{--}\providecommand{\cifraAprioriSinMemoria}{--}
 \providecommand{\cifraAprioriCorridas}{--}
 
+% Tabla en una columna. Si no cabe, se reduce lo justo para no invadir la otra.
 \newcommand{\incluirtabla}[1]{
-  \IfFileExists{tablas/#1}{\begin{center}\footnotesize\input{tablas/#1}\end{center}}
+  \IfFileExists{tablas/#1}{\begin{center}\scriptsize
+    \sbox0{\input{tablas/#1}}%
+    \ifdim\wd0>\linewidth\resizebox{\linewidth}{!}{\usebox0}\else\usebox0\fi
+    \end{center}}
+  {\begin{center}\small\textit{(tabla pendiente: \texttt{make all})}\end{center}}}
+% Tabla ancha: float a dos columnas, sin reducir el tipo.
+\newcommand{\incluirtablaancha}[1]{
+  \IfFileExists{tablas/#1}{\begin{table*}[t]\centering\footnotesize
+    \sbox0{\input{tablas/#1}}%
+    \ifdim\wd0>\linewidth\resizebox{\linewidth}{!}{\usebox0}\else\usebox0\fi
+    \end{table*}}
   {\begin{center}\small\textit{(tabla pendiente: \texttt{make all})}\end{center}}}
 \newcommand{\incluirfigura}[2]{
   \IfFileExists{../outputs/figs/#1}{
     \begin{figure}[h]\centering
-    \includegraphics[width=0.96\linewidth]{../outputs/figs/#1}
+    \includegraphics[width=0.90\linewidth]{../outputs/figs/#1}
     \caption{\footnotesize #2}
     \end{figure}}{
     \begin{center}\small\textit{(figura pendiente: \texttt{make all})}\end{center}}}
@@ -84,6 +98,8 @@ La demanda está muy concentrada: las empanadas aparecen en una de cada diez fac
 el segundo producto del ranking ya baja al 41\,\% de ese volumen y el décimo no llega al
 22\,\%. El ranking completo está en \texttt{outputs/tables/06\_top10.csv}.
 
+\incluirtabla{top10.tex}
+
 Los 13 archivos cubren dos semanas desiguales; solo el tramo del 9 al 15 de marzo trae
 los siete días una vez cada uno, y es el único donde comparar días es limpio. Sobre ese
 panel de \cifraFacturasPanel{} facturas, el índice es el valor del día sobre el promedio
@@ -102,9 +118,10 @@ Ambos algoritmos reciben la misma matriz binaria y los mismos parámetros, así 
 itemsets frecuentes: coinciden en \cifraEquivalentes{} de las \cifraCombinaciones{}
 combinaciones comparables. Las otras \cifraSinCompletar{} no se pueden comparar porque
 \textbf{apriori no terminó}: agotó la memoria en \cifraAprioriSinMemoria{} de sus
-\cifraAprioriCorridas{} corridas, todas las de soporte igual o menor a 0,001.
+\cifraAprioriCorridas{} corridas, todas las de soporte igual o menor a
+\cifraSoporteAprioriMuere{}.
 
-\incluirtabla{benchmark.tex}
+\incluirtablaancha{benchmark.tex}
 
 \incluirfigura{10_benchmark.png}{Tiempo y número de reglas según el soporte mínimo
 (escalas logarítmicas). Mismo resultado, distinto costo.}
@@ -117,12 +134,14 @@ predecible es empanada $\rightarrow$ jugo.
 
 \textbf{2. ¿Difieren los algoritmos?} No en el resultado: donde ambos terminan, los
 itemsets son idénticos. Sí en costo, y de dos maneras. En tiempo, el orden se invierte
-según el soporte: a 0,005 apriori es casi tres veces \emph{más rápido}, porque armar el
-FP-tree tiene un costo fijo que no se amortiza cuando hay poco que minar; a 0,002
-fp-growth ya es seis veces más rápido. En memoria la diferencia es cualitativa: apriori
-materializa los candidatos de cada nivel, y con unos 500 ítems frecuentes eso son
-125.000 pares contra 68.807 transacciones, de modo que el proceso muere. fp-growth no
-genera candidatos y completa el mismo caso en 11 segundos.
+según el soporte: donde ambos terminan ---soporte \cifraSoporteAprioriCompleta{}---
+apriori es \cifraVentajaApriori{} veces \emph{más rápido}, porque armar el FP-tree tiene
+un costo fijo que no se amortiza cuando hay poco que minar. Pero ese es el único régimen
+donde comparar tiempos tiene sentido: desde \cifraSoporteAprioriMuere{} hacia abajo la
+diferencia deja de ser de velocidad y pasa a ser de viabilidad. Apriori materializa los
+candidatos de cada nivel, y con unos 500 ítems frecuentes eso son 125.000 pares contra
+\cifraFacturas{} transacciones, de modo que el proceso muere; fp-growth no genera
+candidatos y resuelve ese mismo caso en \cifraFpgrowthDondeAprioriMuere{} segundos.
 
 \textbf{3. Efecto de los parámetros.} El soporte mínimo gobierna todo:
 
@@ -130,7 +149,8 @@ genera candidatos y completa el mismo caso en 11 segundos.
 
 Bajar de 0,0005 a 0,0002 multiplica las reglas por 134, pero solo una de cada veinte
 sobrevive al filtro de soporte absoluto. El soporte también decide qué algoritmo es
-viable: por debajo de 0,001, apriori deja de ser una opción en esta máquina.
+viable: desde \cifraSoporteAprioriMuere{}, apriori deja de ser una opción en esta
+máquina.
 \texttt{max\_len} acota el crecimiento limitando el tamaño de los itemsets, aunque no
 salva a apriori, porque el cuello está en los candidatos de nivel 2.
 
@@ -158,6 +178,8 @@ aparecen \textbf{sustitutos}, que el lift revela igual de bien ---sándwich
 $\rightarrow$ empanada tiene lift 0,90---: un lift bajo 1 significa que los productos
 compiten por la misma compra.
 
+\incluirtabla{reglas.tex}
+
 \textbf{8. Comportamiento del consumidor.} Todo apunta a consumo inmediato: canasta de
 dos productos, ticket mediano de \cifraTicketMediano{}, 41\,\% de facturas de un solo
 ítem y reglas que unen un alimento con una bebida. El cliente no hace mercado, resuelve
@@ -168,7 +190,7 @@ semana confirma que cambia el volumen de visitas, no la lógica de la compra.
 
 Elegir entre apriori y fp-growth no es cuestión de resultado sino de escala, y la
 frontera no es el tiempo sino la memoria: producen los mismos itemsets, pero por debajo
-de 0,001 apriori no llega a producirlos. A soporte alto, en cambio, apriori gana, así
+de \cifraSoporteAprioriCompleta{} apriori no llega a producirlos. A soporte alto, en cambio, apriori gana, así
 que la recomendación no es universal: depende del régimen, y este conjunto ---canastas
 de dos productos--- obliga al régimen donde fp-growth es la única opción. Ahí los
 soportes altos no devuelven nada y los muy bajos sobre todo ruido; el soporte absoluto

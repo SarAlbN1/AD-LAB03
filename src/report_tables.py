@@ -10,6 +10,7 @@ Uso: ``python -m src.report_tables`` -> escribe ``report/tablas/*.tex``
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 import pandas as pd
@@ -42,26 +43,28 @@ def _acortar(texto: str, maximo: int = 26) -> str:
     return texto if len(texto) <= maximo else texto[: maximo - 1] + "…"
 
 
-#: Caracteres que puede tener una cifra ya formateada (miles, decimales, signos).
-_CARACTERES_NUMERICOS = set("0123456789.,$%×-+e ")
+#: Una cifra dentro de una celda: digitos con separadores de miles y decimales.
+_NUMERO = re.compile(r"\d[\d,]*(?:\.\d+)?")
+_INVERTIR = str.maketrans({",": ".", ".": ","})
 
 
 def a_castellano(texto: str) -> str:
-    """Pasa una cifra de notación inglesa a española: 1,234.5 -> 1.234,5.
+    """Pasa las cifras de notación inglesa a española: 1,234.5 -> 1.234,5.
 
     pandas y Python formatean con coma de miles y punto decimal. El informe está en
     español, donde es al revés, y mezclar las dos notaciones en el mismo documento
     ---'147,411 renglones' junto a '5.978 facturas'--- hace ambiguo si un separador es
-    de miles o decimal. La conversión solo toca celdas que son enteramente numéricas,
-    para no alterar nombres de producto.
+    de miles o decimal. La conversión actúa sobre cada cifra de la celda y no sobre la
+    celda entera: así también alcanza a las que vienen acompañadas de texto o de
+    escapes de LaTeX ---'28,203 (41.0\\%)'--- y deja intactos los nombres de producto,
+    donde los números no llevan separador.
     """
-    if not texto or not set(texto) <= _CARACTERES_NUMERICOS:
-        return texto
-    return texto.translate(str.maketrans({",": ".", ".": ","}))
+    return _NUMERO.sub(lambda m: m.group(0).translate(_INVERTIR), texto)
 
 
 def tabular(df: pd.DataFrame, columnas: dict[str, str], alineacion: str,
-            acortar: tuple[str, ...] = (), formato: dict | None = None) -> str:
+            acortar: tuple[str, ...] = (), formato: dict | None = None,
+            maximo: int = 26) -> str:
     """Convierte un DataFrame en un `tabular` de LaTeX listo para incluir.
 
     `columnas` mapea nombre en el CSV -> encabezado en el PDF, y fija el orden.
@@ -75,7 +78,7 @@ def tabular(df: pd.DataFrame, columnas: dict[str, str], alineacion: str,
             if col in formato:
                 valor = formato[col](valor)
             if col in acortar:
-                valor = _acortar(valor)
+                valor = _acortar(valor, maximo)
             celdas.append(a_castellano(escapar(valor)))
         filas.append(" & ".join(celdas) + r" \\")
 
@@ -118,9 +121,27 @@ def _p_valor_latex(texto: str) -> str:
         return str(texto)
 
 
+def _decimales(valor, dec: int = 2) -> str:
+    """Cifra con separador de miles y `dec` decimales: 4914.79 -> 4,914.79.
+
+    En notacion inglesa a proposito, igual que `_miles`: a_castellano() la invierte.
+    """
+    try:
+        return f"{float(valor):,.{dec}f}"
+    except (TypeError, ValueError):
+        return str(valor)
+
+
+def _soporte(valor) -> str:
+    """Soporte minimo tal como lo cita el texto: sin ceros de relleno."""
+    return f"{float(valor):g}"
+
+
 def _miles(valor) -> str:
     try:
-        return f"{float(valor):,.0f}".replace(",", ".")
+        # Notacion inglesa a proposito: a_castellano() la invierte despues. Formatear
+        # aqui en espanol hacia que la conversion posterior la volviera a invertir.
+        return f"{float(valor):,.0f}"
     except (TypeError, ValueError):
         return str(valor)
 
@@ -200,15 +221,17 @@ def tabla_parametros() -> None:
             df,
             {
                 "min_support": "Soporte",
-                "facturas_minimas": "Facturas mín.",
+                "facturas_minimas": "Fact. mín.",
                 "itemsets": "Itemsets",
                 "reglas": "Reglas",
-                "reglas_con_soporte_abs_30": r"Reglas $\geq$30",
+                "reglas_con_soporte_abs_30": r"Reglas$_{\geq 30}$",
                 "lift_maximo": "Lift máx.",
             },
             "lrrrrr",
             formato={"itemsets": _miles, "reglas": _miles,
-                     "reglas_con_soporte_abs_30": _miles},
+                     "reglas_con_soporte_abs_30": _miles,
+                     "facturas_minimas": _miles,
+                     "lift_maximo": _decimales},
         ),
     )
 
@@ -222,7 +245,7 @@ def tabla_reglas() -> None:
     _escribir(
         "reglas.tex",
         tabular(
-            df.head(8),
+            df.head(6),
             {
                 "antecedente": "Antecedente",
                 "consecuente": "Consecuente",
@@ -232,6 +255,7 @@ def tabla_reglas() -> None:
             },
             "llrrr",
             acortar=("antecedente", "consecuente"),
+            maximo=16,
             formato={
                 "confidence": lambda v: f"{float(v):.2f}",
                 "lift": lambda v: f"{float(v):.2f}",
@@ -247,7 +271,7 @@ def tabla_top10() -> None:
     _escribir(
         "top10.tex",
         tabular(
-            df.head(6),   # el reporte tiene dos paginas; el ranking completo esta en outputs/
+            df.head(5),   # el reporte tiene dos paginas; el ranking completo esta en outputs/
             {
                 "producto": "Producto",
                 "facturas": "Facturas",
@@ -258,7 +282,7 @@ def tabla_top10() -> None:
             acortar=("producto",),
             formato={
                 "facturas": _miles,
-                "soporte": lambda v: f"{float(v) * 100:.1f}\\%",
+                "soporte": lambda v: f"{float(v) * 100:.1f}%",
                 "pct_del_lider": lambda v: f"{float(v):.0f}",
             },
         ),
@@ -306,12 +330,41 @@ def macros_cifras() -> None:
         lineas.append(macro("cifraSinCompletar", str(len(equivalencia) - comparables)))
 
     bench = _leer("10_benchmark_crudo.csv")
+    combos = _leer("11_benchmark_por_combinacion.csv")
     if bench is not None and "estado" in bench.columns:
-        sin_memoria = bench[(bench["algoritmo"] == "apriori")
-                            & (bench["estado"] == "memoria")]
-        total_apriori = int((bench["algoritmo"] == "apriori").sum())
+        apriori_corridas = bench[bench["algoritmo"] == "apriori"]
+        sin_memoria = apriori_corridas[apriori_corridas["estado"] == "memoria"]
         lineas.append(macro("cifraAprioriSinMemoria", str(len(sin_memoria))))
-        lineas.append(macro("cifraAprioriCorridas", str(total_apriori)))
+        lineas.append(macro("cifraAprioriCorridas", str(len(apriori_corridas))))
+
+        # En que soporte apriori deja de ser viable. Depende de la memoria de la
+        # maquina, asi que sale del estado de las corridas y no de una frase a mano:
+        # era justo la cifra que quedaba vieja al repetir el benchmark.
+        completadas = apriori_corridas[apriori_corridas["estado"] == "ok"]
+        soporte_vive = completadas["min_support"].min() if len(completadas) else None
+        soporte_muere = sin_memoria["min_support"].max() if len(sin_memoria) else None
+        if soporte_vive is not None:
+            lineas.append(macro("cifraSoporteAprioriCompleta", _soporte(soporte_vive)))
+        if soporte_muere is not None:
+            lineas.append(macro("cifraSoporteAprioriMuere", _soporte(soporte_muere)))
+
+        if combos is not None and len(combos):
+            # Sin limite de max_len: es la fila que cita la tabla del informe.
+            libre = combos[combos["max_len"].isna()]
+            tiempos = libre.set_index(["algoritmo", "min_support"])["tiempo_mediano_s"]
+
+            # Donde ambos terminan, apriori gana: el FP-tree tiene un costo fijo.
+            if soporte_vive is not None and {("apriori", soporte_vive),
+                                            ("fpgrowth", soporte_vive)} <= set(tiempos.index):
+                razon = (tiempos[("fpgrowth", soporte_vive)]
+                         / tiempos[("apriori", soporte_vive)])
+                lineas.append(macro("cifraVentajaApriori", f"{razon:.1f}"))
+
+            # Y el tiempo de fp-growth en el primer caso que apriori no aguanta: ahi la
+            # diferencia deja de ser de velocidad y pasa a ser de viabilidad.
+            if soporte_muere is not None and ("fpgrowth", soporte_muere) in tiempos.index:
+                lineas.append(macro("cifraFpgrowthDondeAprioriMuere",
+                                    f"{tiempos[('fpgrowth', soporte_muere)]:.1f}"))
 
     _escribir("cifras.tex", "\n".join(lineas))
 
